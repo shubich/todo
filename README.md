@@ -27,6 +27,15 @@ npm run build
 npm run preview
 ```
 
+## Deploy (GitHub Pages)
+
+The app deploys to GitHub Pages on every push to `main`.
+
+1. In the repo: **Settings → Pages → Build and deployment → Source** → choose **GitHub Actions**.
+2. Push to `main` (or merge a PR). The workflow builds the app and deploys to `https://<username>.github.io/<repo>/`.
+
+No extra config is needed; the workflow uses the repo name as the base path.
+
 ## Tech
 
 - React 19 + TypeScript
