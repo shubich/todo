@@ -1,0 +1,50 @@
+.add-task-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.add-task-form__input {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.add-task-form__input::placeholder {
+  color: var(--text-muted);
+}
+
+.add-task-form__input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-alpha);
+}
+
+.add-task-form__submit {
+  padding: 0.65rem 1.25rem;
+  font-weight: 500;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.add-task-form__submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.add-task-form__submit:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.add-task-form__submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

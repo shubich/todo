@@ -1,0 +1,32 @@
+.column {
+  flex: 1;
+  min-width: 260px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  background: var(--column-bg);
+  border-radius: 12px;
+  border: 1px solid var(--column-border);
+  padding: 1rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.column--drop-target {
+  background: var(--column-drop-bg);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-alpha);
+}
+
+.column__title {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.column__tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 80px;
+}
