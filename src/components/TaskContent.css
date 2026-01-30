@@ -38,6 +38,56 @@
   margin-bottom: 0;
 }
 
+/* Checkbox list */
+.task-content__list--checkbox {
+  list-style: none;
+  padding-left: 0;
+}
+
+.task-content__checkbox-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  list-style: none;
+}
+
+.task-content__checkbox-item:last-child {
+  margin-bottom: 0;
+}
+
+.task-content__checkbox {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.task-content__checkbox-label--checked {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Inline formatting */
+.task-content strong {
+  font-weight: 700;
+}
+
+.task-content em {
+  font-style: italic;
+}
+
+.task-content u {
+  text-decoration: underline;
+}
+
+.task-content del {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
 .task-content--raw {
   margin: 0;
   font-family: inherit;

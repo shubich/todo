@@ -97,12 +97,16 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
               className="task-detail__textarea"
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              placeholder={'First line = title (like iOS Notes)\nThen add notes or lists:\n- item one\n- item two\n1. step one\n2. step two'}
+              placeholder={'First line = title (like iOS Notes)\nThen add notes or lists:\n- [ ] unchecked item\n- [x] checked item\n**bold** *italic* __underline__ ~~strike~~\n1. step one\n2. step two'}
               autoFocus
               rows={12}
             />
           ) : (
-            <TaskContent content={task.content} displayMode />
+            <TaskContent
+              content={task.content}
+              displayMode
+              onUpdate={(newContent) => onUpdate(task.id, newContent)}
+            />
           )}
         </div>
       </div>
