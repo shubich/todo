@@ -2,35 +2,41 @@ import { useState, useCallback } from 'react';
 import './AddTaskForm.css';
 
 interface AddTaskFormProps {
-  onAdd: (title: string) => void;
+  onAdd: (content: string) => void;
 }
 
 export function AddTaskForm({ onAdd }: AddTaskFormProps) {
-  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      const trimmed = title.trim();
+      const trimmed = content.trim();
       if (trimmed) {
         onAdd(trimmed);
-        setTitle('');
+        setContent('');
       }
     },
-    [title, onAdd]
+    [content, onAdd]
   );
 
   return (
     <form className="add-task-form" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="add-task-form__input"
-        placeholder="New task..."
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        aria-label="Task title"
+      <textarea
+        className="add-task-form__input add-task-form__textarea"
+        placeholder="First line = title (like iOS Notes). Add more lines and lists: - item"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(e);
+          }
+        }}
+        aria-label="Task content (first line = title)"
+        rows={2}
       />
-      <button type="submit" className="add-task-form__submit" disabled={!title.trim()}>
+      <button type="submit" className="add-task-form__submit" disabled={!content.trim()}>
         Add
       </button>
     </form>

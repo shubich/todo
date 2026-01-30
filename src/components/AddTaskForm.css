@@ -1,6 +1,7 @@
 .add-task-form {
   display: flex;
   gap: 0.5rem;
+  align-items: flex-end;
   margin-bottom: 1.5rem;
 }
 
@@ -13,6 +14,12 @@
   background: var(--input-bg);
   color: var(--text);
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.add-task-form__textarea {
+  resize: vertical;
+  min-height: 2.5rem;
+  line-height: 1.4;
 }
 
 .add-task-form__input::placeholder {

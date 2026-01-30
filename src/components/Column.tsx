@@ -11,6 +11,7 @@ interface ColumnProps {
   onDragStart: (task: Task) => void;
   onDrop: (taskId: string, targetColumnId: ColumnId) => void;
   onDragOverColumn: (columnId: ColumnId) => void;
+  onOpen: (task: Task) => void;
   onDelete: (taskId: string) => void;
   isDropTarget: boolean;
 }
@@ -23,6 +24,7 @@ export function Column({
   onDragStart,
   onDrop,
   onDragOverColumn,
+  onOpen,
   onDelete,
   isDropTarget,
 }: ColumnProps) {
@@ -52,6 +54,7 @@ export function Column({
             task={task}
             isDragging={draggingTaskId === task.id}
             onDragStart={onDragStart}
+            onOpen={onOpen}
             onDelete={onDelete}
           />
         ))}

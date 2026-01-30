@@ -24,6 +24,14 @@
   transform: scale(0.98);
 }
 
+.task-card__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .task-card__title {
   margin: 0;
   font-size: 0.95rem;
@@ -32,6 +40,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.task-card__hint {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .task-card__delete {
