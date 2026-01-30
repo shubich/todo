@@ -1,4 +1,4 @@
-export type ColumnId = 'todo' | 'in-progress' | 'done';
+export type ColumnId = 'todo' | 'in-progress' | 'done' | 'failed';
 
 export interface Task {
   id: string;
@@ -25,4 +25,5 @@ export const COLUMNS: { id: ColumnId; label: string }[] = [
   { id: 'todo', label: 'To Do' },
   { id: 'in-progress', label: 'In Progress' },
   { id: 'done', label: 'Done' },
+  { id: 'failed', label: 'Failed' },
 ];

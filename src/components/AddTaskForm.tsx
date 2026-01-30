@@ -24,7 +24,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
     <form className="add-task-form" onSubmit={handleSubmit}>
       <textarea
         className="add-task-form__input add-task-form__textarea"
-        placeholder="First line = title (like iOS Notes). Add more lines and lists: - item"
+        placeholder="First line is the title. Add more lines below."
         value={content}
         onChange={(e) => setContent(e.target.value)}
         onKeyDown={(e) => {

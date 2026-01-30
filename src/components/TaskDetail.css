@@ -99,6 +99,45 @@
   min-height: 0;
 }
 
+.task-detail__instructions {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--card-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.task-detail__instructions-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text);
+}
+
+.task-detail__instructions-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  line-height: 1.5;
+}
+
+.task-detail__instructions-list li {
+  margin-bottom: 0.2rem;
+}
+
+.task-detail__instructions-list li:last-child {
+  margin-bottom: 0;
+}
+
+.task-detail__instructions-list code {
+  font-size: 0.8em;
+  padding: 0.1em 0.35em;
+  background: var(--column-bg);
+  border-radius: 4px;
+}
+
 .task-detail__textarea {
   width: 100%;
   min-height: 200px;

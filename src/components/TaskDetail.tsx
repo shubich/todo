@@ -92,15 +92,26 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
         </div>
         <div className="task-detail__content">
           {isEditing ? (
-            <textarea
-              id="task-detail-title"
-              className="task-detail__textarea"
-              value={editContent}
-              onChange={(e) => setEditContent(e.target.value)}
-              placeholder={'First line = title (like iOS Notes)\nThen add notes or lists:\n- [ ] unchecked item\n- [x] checked item\n**bold** *italic* __underline__ ~~strike~~\n1. step one\n2. step two'}
-              autoFocus
-              rows={12}
-            />
+            <>
+              <div className="task-detail__instructions">
+                <p className="task-detail__instructions-title">Formatting</p>
+                <ul className="task-detail__instructions-list">
+                  <li><strong>**bold**</strong> <em>*italic*</em> <u>__underline__</u> <del>~~strikethrough~~</del></li>
+                  <li>Checklists: <code>- [ ]</code> unchecked, <code>- [x]</code> checked</li>
+                  <li>Bullets: <code>- item</code> or <code>* item</code></li>
+                  <li>Numbers: <code>1. item</code> or <code>1) item</code></li>
+                </ul>
+              </div>
+              <textarea
+                id="task-detail-title"
+                className="task-detail__textarea"
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                placeholder="First line is the title. Add more lines below."
+                autoFocus
+                rows={12}
+              />
+            </>
           ) : (
             <TaskContent
               content={task.content}

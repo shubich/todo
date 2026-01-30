@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { Task } from './types/task';
 import { COLUMNS, type ColumnId } from './types/task';
+import { loadTasks, saveTasks } from './storage';
 import { AddTaskForm } from './components/AddTaskForm';
 import { Column } from './components/Column';
 import { TaskDetail } from './components/TaskDetail';
@@ -16,7 +17,11 @@ function createTask(content: string, columnId: ColumnId): Task {
 }
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
+
+  useEffect(() => {
+    saveTasks(tasks);
+  }, [tasks]);
   const [draggingTaskId, setDraggingTaskId] = useState<string | null>(null);
   const [dropTargetColumnId, setDropTargetColumnId] = useState<ColumnId | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
