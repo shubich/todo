@@ -4,9 +4,15 @@ import './AddTaskForm.css';
 
 interface AddTaskFormProps {
   onAdd: (content: string, priority: Priority, storyPoints: number | null) => void;
+  labels: {
+    placeholder: string;
+    priority: string;
+    storyPoints: string;
+    add: string;
+  };
 }
 
-export function AddTaskForm({ onAdd }: AddTaskFormProps) {
+export function AddTaskForm({ onAdd, labels }: AddTaskFormProps) {
   const [content, setContent] = useState('');
   const [priority, setPriority] = useState<Priority>('medium');
   const [storyPoints, setStoryPoints] = useState<string>('');
@@ -34,7 +40,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
     <form className="add-task-form" onSubmit={handleSubmit}>
       <textarea
         className="add-task-form__input add-task-form__textarea"
-        placeholder="First line is the title. Add more lines below."
+        placeholder={labels.placeholder}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         onKeyDown={(e) => {
@@ -48,7 +54,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
       />
       <div className="add-task-form__controls">
         <label className="add-task-form__priority-label">
-          Priority
+          {labels.priority}
           <select
             className="add-task-form__priority"
             value={priority}
@@ -63,7 +69,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
           </select>
         </label>
         <label className="add-task-form__priority-label">
-          Story points
+          {labels.storyPoints}
           <input
             type="number"
             min={0}
@@ -76,7 +82,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
           />
         </label>
         <button type="submit" className="add-task-form__submit" disabled={!content.trim()}>
-          Add
+          {labels.add}
         </button>
       </div>
     </form>

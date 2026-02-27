@@ -8,11 +8,43 @@
   margin: 0 auto 1.5rem;
 }
 
+.app__header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
 .app__title {
-  margin: 0 0 1rem;
+  margin: 0;
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text);
+}
+
+.app__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.app__control {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.app__control-select {
+  height: 34px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text);
+  padding: 0 0.55rem;
 }
 
 .app__dashboard {
@@ -40,4 +72,11 @@
 
 .app__dashboard::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-hover);
+}
+
+@media (max-width: 680px) {
+  .app__header-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

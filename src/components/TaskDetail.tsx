@@ -11,9 +11,22 @@ interface TaskDetailProps {
     updates: { content?: string; priority?: Priority; storyPoints?: number | null }
   ) => void;
   onDelete: (taskId: string) => void;
+  labels: {
+    done: string;
+    edit: string;
+    save: string;
+    delete: string;
+    formatting: string;
+    checklist: string;
+    bullets: string;
+    numbers: string;
+    contentPlaceholder: string;
+    priority: string;
+    storyPoints: string;
+  };
 }
 
-export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProps) {
+export function TaskDetail({ task, onClose, onUpdate, onDelete, labels }: TaskDetailProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(task.content);
   const [editPriority, setEditPriority] = useState<Priority>(task.priority);
@@ -87,7 +100,7 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
             onClick={onClose}
             aria-label="Close"
           >
-            Done
+            {labels.done}
           </button>
           <div className="task-detail__actions">
             <button
@@ -95,7 +108,7 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
               className="task-detail__action"
               onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
             >
-              {isEditing ? 'Save' : 'Edit'}
+              {isEditing ? labels.save : labels.edit}
             </button>
             <button
               type="button"
@@ -106,7 +119,7 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
               }}
               aria-label="Delete task"
             >
-              Delete
+              {labels.delete}
             </button>
           </div>
         </div>
@@ -114,17 +127,17 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
           {isEditing ? (
             <>
               <div className="task-detail__instructions">
-                <p className="task-detail__instructions-title">Formatting</p>
+                <p className="task-detail__instructions-title">{labels.formatting}</p>
                 <ul className="task-detail__instructions-list">
                   <li><strong>**bold**</strong> <em>*italic*</em> <u>__underline__</u> <del>~~strikethrough~~</del></li>
-                  <li>Checklists: <code>- [ ]</code> unchecked, <code>- [x]</code> checked</li>
-                  <li>Bullets: <code>- item</code> or <code>* item</code></li>
-                  <li>Numbers: <code>1. item</code> or <code>1) item</code></li>
+                  <li>{labels.checklist}<code>- [ ]</code>, <code>- [x]</code></li>
+                  <li>{labels.bullets}<code>- item</code>, <code>* item</code></li>
+                  <li>{labels.numbers}<code>1. item</code>, <code>1) item</code></li>
                 </ul>
               </div>
               <div className="task-detail__edit-meta">
                 <label className="task-detail__priority-label">
-                  Priority
+                  {labels.priority}
                   <select
                     className="task-detail__priority"
                     value={editPriority}
@@ -138,7 +151,7 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
                   </select>
                 </label>
                 <label className="task-detail__priority-label">
-                  Story points
+                  {labels.storyPoints}
                   <input
                     type="number"
                     min={0}
@@ -155,7 +168,7 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
                 className="task-detail__textarea"
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                placeholder="First line is the title. Add more lines below."
+                placeholder={labels.contentPlaceholder}
                 autoFocus
                 rows={12}
               />

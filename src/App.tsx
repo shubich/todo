@@ -7,6 +7,80 @@ import { Column } from './components/Column';
 import { TaskDetail } from './components/TaskDetail';
 import './App.css';
 
+type Theme = 'light' | 'dark';
+type Language = 'ru' | 'en';
+
+const UI_TEXT = {
+  ru: {
+    appTitle: 'Todo',
+    themeLabel: 'Тема',
+    languageLabel: 'Язык',
+    themeLight: 'Светлая',
+    themeDark: 'Темная',
+    languageRu: 'Русский',
+    languageEn: 'English',
+    columns: {
+      todo: 'К выполнению',
+      'in-progress': 'В работе',
+      done: 'Готово',
+      failed: 'Провалено',
+    } as Record<ColumnId, string>,
+    addForm: {
+      placeholder: 'Первая строка — заголовок. Ниже добавьте детали.',
+      priority: 'Приоритет',
+      storyPoints: 'Стори поинты',
+      add: 'Добавить',
+    },
+    detail: {
+      done: 'Готово',
+      edit: 'Редактировать',
+      save: 'Сохранить',
+      delete: 'Удалить',
+      formatting: 'Форматирование',
+      checklist: 'Чек-лист: ',
+      bullets: 'Пункты: ',
+      numbers: 'Нумерация: ',
+      contentPlaceholder: 'Первая строка — заголовок. Ниже добавьте детали.',
+      priority: 'Приоритет',
+      storyPoints: 'Стори поинты',
+    },
+  },
+  en: {
+    appTitle: 'Todo',
+    themeLabel: 'Theme',
+    languageLabel: 'Language',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    languageRu: 'Russian',
+    languageEn: 'English',
+    columns: {
+      todo: 'To Do',
+      'in-progress': 'In Progress',
+      done: 'Done',
+      failed: 'Failed',
+    } as Record<ColumnId, string>,
+    addForm: {
+      placeholder: 'First line is the title. Add more details below.',
+      priority: 'Priority',
+      storyPoints: 'Story points',
+      add: 'Add',
+    },
+    detail: {
+      done: 'Done',
+      edit: 'Edit',
+      save: 'Save',
+      delete: 'Delete',
+      formatting: 'Formatting',
+      checklist: 'Checklists: ',
+      bullets: 'Bullets: ',
+      numbers: 'Numbers: ',
+      contentPlaceholder: 'First line is the title. Add more details below.',
+      priority: 'Priority',
+      storyPoints: 'Story points',
+    },
+  },
+};
+
 function createTask(
   content: string,
   columnId: ColumnId,
@@ -27,10 +101,25 @@ function createTask(
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem('todo-theme');
+    return saved === 'dark' || saved === 'light' ? saved : 'light';
+  });
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = localStorage.getItem('todo-language');
+    return saved === 'en' || saved === 'ru' ? saved : 'ru';
+  });
 
   useEffect(() => {
     saveTasks(tasks);
   }, [tasks]);
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('todo-theme', theme);
+  }, [theme]);
+  useEffect(() => {
+    localStorage.setItem('todo-language', language);
+  }, [language]);
   const [draggingTaskId, setDraggingTaskId] = useState<string | null>(null);
   const [dropTargetColumnId, setDropTargetColumnId] = useState<ColumnId | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -106,19 +195,46 @@ function App() {
   const selectedTaskCurrent = selectedTask
     ? tasks.find((t) => t.id === selectedTask.id) ?? selectedTask
     : null;
+  const t = UI_TEXT[language];
 
   return (
     <div className="app" onDragEnd={handleDragEnd}>
       <header className="app__header">
-        <h1 className="app__title">Todo</h1>
-        <AddTaskForm onAdd={addTask} />
+        <div className="app__header-top">
+          <h1 className="app__title">{t.appTitle}</h1>
+          <div className="app__controls">
+            <label className="app__control">
+              {t.themeLabel}
+              <select
+                className="app__control-select"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value as Theme)}
+              >
+                <option value="light">{t.themeLight}</option>
+                <option value="dark">{t.themeDark}</option>
+              </select>
+            </label>
+            <label className="app__control">
+              {t.languageLabel}
+              <select
+                className="app__control-select"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as Language)}
+              >
+                <option value="ru">{t.languageRu}</option>
+                <option value="en">{t.languageEn}</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <AddTaskForm onAdd={addTask} labels={t.addForm} />
       </header>
       <div className="app__dashboard">
-        {COLUMNS.map(({ id, label }) => (
+        {COLUMNS.map(({ id }) => (
           <Column
             key={id}
             columnId={id}
-            title={label}
+            title={t.columns[id]}
             tasks={tasks.filter((t) => t.columnId === id)}
             draggingTaskId={draggingTaskId}
             onDragStart={handleDragStart}
@@ -136,6 +252,7 @@ function App() {
           onClose={() => setSelectedTask(null)}
           onUpdate={updateTask}
           onDelete={deleteTask}
+          labels={t.detail}
         />
       )}
     </div>
