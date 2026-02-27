@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { PRIORITIES, type Priority, type Task } from '../types/task';
+import { COLUMNS, PRIORITIES, type ColumnId, type Priority, type Task } from '../types/task';
 import { TaskContent } from './TaskContent';
 import './TaskDetail.css';
 
@@ -11,6 +11,8 @@ interface TaskDetailProps {
     updates: { content?: string; priority?: Priority; storyPoints?: number | null }
   ) => void;
   onDelete: (taskId: string) => void;
+  onMove: (taskId: string, targetColumnId: ColumnId) => void;
+  columnLabels: Record<ColumnId, string>;
   labels: {
     done: string;
     edit: string;
@@ -23,10 +25,19 @@ interface TaskDetailProps {
     contentPlaceholder: string;
     priority: string;
     storyPoints: string;
+    moveTo: string;
   };
 }
 
-export function TaskDetail({ task, onClose, onUpdate, onDelete, labels }: TaskDetailProps) {
+export function TaskDetail({
+  task,
+  onClose,
+  onUpdate,
+  onDelete,
+  onMove,
+  columnLabels,
+  labels,
+}: TaskDetailProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(task.content);
   const [editPriority, setEditPriority] = useState<Priority>(task.priority);
@@ -124,6 +135,22 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete, labels }: TaskDe
           </div>
         </div>
         <div className="task-detail__content">
+          <div className="task-detail__status-row">
+            <label className="task-detail__priority-label">
+              {labels.moveTo}
+              <select
+                className="task-detail__priority"
+                value={task.columnId}
+                onChange={(e) => onMove(task.id, e.target.value as ColumnId)}
+              >
+                {COLUMNS.map((column) => (
+                  <option key={column.id} value={column.id}>
+                    {columnLabels[column.id]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           {isEditing ? (
             <>
               <div className="task-detail__instructions">

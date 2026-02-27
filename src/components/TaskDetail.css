@@ -99,6 +99,10 @@
   min-height: 0;
 }
 
+.task-detail__status-row {
+  margin-bottom: 0.75rem;
+}
+
 .task-detail__instructions {
   margin-bottom: 1rem;
   padding: 0.75rem 1rem;
@@ -181,4 +185,19 @@
   border-radius: 8px;
   background: var(--input-bg);
   color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .task-detail-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .task-detail {
+    max-width: none;
+    width: 100%;
+    max-height: 92vh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }

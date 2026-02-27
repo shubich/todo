@@ -9,6 +9,7 @@ import './App.css';
 
 type Theme = 'light' | 'dark';
 type Language = 'ru' | 'en';
+const MOBILE_BREAKPOINT = 768;
 
 const UI_TEXT = {
   ru: {
@@ -43,6 +44,10 @@ const UI_TEXT = {
       contentPlaceholder: 'Первая строка — заголовок. Ниже добавьте детали.',
       priority: 'Приоритет',
       storyPoints: 'Стори поинты',
+      moveTo: 'Переместить в',
+    },
+    mobile: {
+      columns: 'Колонки',
     },
   },
   en: {
@@ -77,6 +82,10 @@ const UI_TEXT = {
       contentPlaceholder: 'First line is the title. Add more details below.',
       priority: 'Priority',
       storyPoints: 'Story points',
+      moveTo: 'Move to',
+    },
+    mobile: {
+      columns: 'Columns',
     },
   },
 };
@@ -109,6 +118,11 @@ function App() {
     const saved = localStorage.getItem('todo-language');
     return saved === 'en' || saved === 'ru' ? saved : 'ru';
   });
+  const [isMobileView, setIsMobileView] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= MOBILE_BREAKPOINT;
+  });
+  const [activeMobileColumn, setActiveMobileColumn] = useState<ColumnId>('todo');
 
   useEffect(() => {
     saveTasks(tasks);
@@ -120,6 +134,15 @@ function App() {
   useEffect(() => {
     localStorage.setItem('todo-language', language);
   }, [language]);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsMobileView(e.matches);
+    };
+    mq.addEventListener('change', handleChange);
+    return () => mq.removeEventListener('change', handleChange);
+  }, []);
   const [draggingTaskId, setDraggingTaskId] = useState<string | null>(null);
   const [dropTargetColumnId, setDropTargetColumnId] = useState<ColumnId | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -196,6 +219,9 @@ function App() {
     ? tasks.find((t) => t.id === selectedTask.id) ?? selectedTask
     : null;
   const t = UI_TEXT[language];
+  const visibleColumns = isMobileView
+    ? COLUMNS.filter((column) => column.id === activeMobileColumn)
+    : COLUMNS;
 
   return (
     <div className="app" onDragEnd={handleDragEnd}>
@@ -229,8 +255,22 @@ function App() {
         </div>
         <AddTaskForm onAdd={addTask} labels={t.addForm} />
       </header>
-      <div className="app__dashboard">
-        {COLUMNS.map(({ id }) => (
+      {isMobileView && (
+        <nav className="app__mobile-columns" aria-label={t.mobile.columns}>
+          {COLUMNS.map(({ id }) => (
+            <button
+              key={id}
+              type="button"
+              className={`app__mobile-tab ${activeMobileColumn === id ? 'app__mobile-tab--active' : ''}`}
+              onClick={() => setActiveMobileColumn(id)}
+            >
+              {t.columns[id]}
+            </button>
+          ))}
+        </nav>
+      )}
+      <div className={`app__dashboard ${isMobileView ? 'app__dashboard--mobile' : ''}`}>
+        {visibleColumns.map(({ id }) => (
           <Column
             key={id}
             columnId={id}
@@ -252,6 +292,8 @@ function App() {
           onClose={() => setSelectedTask(null)}
           onUpdate={updateTask}
           onDelete={deleteTask}
+          onMove={moveTask}
+          columnLabels={t.columns}
           labels={t.detail}
         />
       )}

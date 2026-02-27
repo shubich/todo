@@ -30,3 +30,11 @@
   gap: 0.5rem;
   min-height: 80px;
 }
+
+@media (max-width: 768px) {
+  .column {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+  }
+}
