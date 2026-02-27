@@ -35,6 +35,17 @@ export function TaskCard({ task, isDragging, onDragStart, onDelete, onOpen }: Ta
       <div className="task-card__main">
         <p className="task-card__title">{title || 'Untitled'}</p>
         {body && <p className="task-card__body">{body}</p>}
+        <div className="task-card__meta">
+          <span
+            className={`task-card__priority-dot task-card__priority-dot--${task.priority}`}
+            aria-label={`Priority: ${task.priority}`}
+            title={`Priority: ${task.priority}`}
+          />
+          <span className="task-card__meta-id">#{task.taskNumber}</span>
+          {task.storyPoints !== null && (
+            <span className="task-card__meta-points">{task.storyPoints} SP</span>
+          )}
+        </div>
       </div>
       <button
         type="button"

@@ -158,3 +158,27 @@
 .task-detail__textarea::placeholder {
   color: var(--text-muted);
 }
+
+.task-detail__priority-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.task-detail__edit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.task-detail__priority {
+  width: 140px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text);
+}

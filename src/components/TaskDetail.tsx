@@ -1,36 +1,56 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { Task } from '../types/task';
+import { PRIORITIES, type Priority, type Task } from '../types/task';
 import { TaskContent } from './TaskContent';
 import './TaskDetail.css';
 
 interface TaskDetailProps {
   task: Task;
   onClose: () => void;
-  onUpdate: (taskId: string, content: string) => void;
+  onUpdate: (
+    taskId: string,
+    updates: { content?: string; priority?: Priority; storyPoints?: number | null }
+  ) => void;
   onDelete: (taskId: string) => void;
 }
 
 export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(task.content);
+  const [editPriority, setEditPriority] = useState<Priority>(task.priority);
+  const [editStoryPoints, setEditStoryPoints] = useState<string>(
+    task.storyPoints === null ? '' : String(task.storyPoints)
+  );
 
   useEffect(() => {
     setEditContent(task.content);
-  }, [task.id, task.content]);
+    setEditPriority(task.priority);
+    setEditStoryPoints(task.storyPoints === null ? '' : String(task.storyPoints));
+  }, [task.id, task.content, task.priority, task.storyPoints]);
 
   const handleSave = useCallback(() => {
     const trimmed = editContent.trim();
     if (trimmed) {
-      onUpdate(task.id, trimmed);
+      const parsedPoints = editStoryPoints.trim() === '' ? null : Number(editStoryPoints);
+      const normalizedPoints =
+        parsedPoints === null || Number.isNaN(parsedPoints)
+          ? null
+          : Math.max(0, Math.floor(parsedPoints));
+      onUpdate(task.id, {
+        content: trimmed,
+        priority: editPriority,
+        storyPoints: normalizedPoints,
+      });
     }
     setIsEditing(false);
-  }, [task.id, editContent, onUpdate]);
+  }, [task.id, editContent, editPriority, editStoryPoints, onUpdate]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (isEditing) {
           setEditContent(task.content);
+          setEditPriority(task.priority);
+          setEditStoryPoints(task.storyPoints === null ? '' : String(task.storyPoints));
           setIsEditing(false);
         } else {
           onClose();
@@ -40,7 +60,7 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
         handleSave();
       }
     },
-    [isEditing, task.content, onClose, handleSave]
+    [isEditing, task.content, task.priority, task.storyPoints, onClose, handleSave]
   );
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -102,6 +122,34 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
                   <li>Numbers: <code>1. item</code> or <code>1) item</code></li>
                 </ul>
               </div>
+              <div className="task-detail__edit-meta">
+                <label className="task-detail__priority-label">
+                  Priority
+                  <select
+                    className="task-detail__priority"
+                    value={editPriority}
+                    onChange={(e) => setEditPriority(e.target.value as Priority)}
+                  >
+                    {PRIORITIES.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="task-detail__priority-label">
+                  Story points
+                  <input
+                    type="number"
+                    min={0}
+                    step={1}
+                    className="task-detail__priority"
+                    value={editStoryPoints}
+                    onChange={(e) => setEditStoryPoints(e.target.value)}
+                    placeholder="e.g. 5"
+                  />
+                </label>
+              </div>
               <textarea
                 id="task-detail-title"
                 className="task-detail__textarea"
@@ -116,7 +164,7 @@ export function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProp
             <TaskContent
               content={task.content}
               displayMode
-              onUpdate={(newContent) => onUpdate(task.id, newContent)}
+              onUpdate={(newContent) => onUpdate(task.id, { content: newContent })}
             />
           )}
         </div>

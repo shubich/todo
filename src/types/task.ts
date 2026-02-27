@@ -1,12 +1,22 @@
 export type ColumnId = 'todo' | 'in-progress' | 'done' | 'failed';
+export type Priority = 'high' | 'medium' | 'low';
 
 export interface Task {
   id: string;
   /** Full multiline content: first line = header (iOS Notes style), rest = body with optional lists */
   content: string;
+  priority: Priority;
+  storyPoints: number | null;
+  taskNumber: number;
   columnId: ColumnId;
   createdAt: number;
 }
+
+export const PRIORITIES: { id: Priority; label: string }[] = [
+  { id: 'high', label: 'High' },
+  { id: 'medium', label: 'Medium' },
+  { id: 'low', label: 'Low' },
+];
 
 /** First line of content used as task title in cards and headers */
 export function getTaskTitle(content: string): string {

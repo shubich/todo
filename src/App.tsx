@@ -1,16 +1,25 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Task } from './types/task';
-import { COLUMNS, type ColumnId } from './types/task';
+import { COLUMNS, type ColumnId, type Priority } from './types/task';
 import { loadTasks, saveTasks } from './storage';
 import { AddTaskForm } from './components/AddTaskForm';
 import { Column } from './components/Column';
 import { TaskDetail } from './components/TaskDetail';
 import './App.css';
 
-function createTask(content: string, columnId: ColumnId): Task {
+function createTask(
+  content: string,
+  columnId: ColumnId,
+  priority: Priority,
+  storyPoints: number | null,
+  taskNumber: number
+): Task {
   return {
     id: crypto.randomUUID(),
     content: content.trim(),
+    priority,
+    storyPoints,
+    taskNumber,
     columnId,
     createdAt: Date.now(),
   };
@@ -26,16 +35,34 @@ function App() {
   const [dropTargetColumnId, setDropTargetColumnId] = useState<ColumnId | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const addTask = useCallback((content: string) => {
-    setTasks((prev) => [...prev, createTask(content, 'todo')]);
+  const addTask = useCallback((content: string, priority: Priority, storyPoints: number | null) => {
+    setTasks((prev) => {
+      const nextTaskNumber = prev.reduce((max, t) => Math.max(max, t.taskNumber), 0) + 1;
+      return [...prev, createTask(content, 'todo', priority, storyPoints, nextTaskNumber)];
+    });
   }, []);
 
-  const updateTask = useCallback((taskId: string, content: string) => {
+  const updateTask = useCallback((taskId: string, updates: { content?: string; priority?: Priority; storyPoints?: number | null }) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, content: content.trim() } : t))
+      prev.map((t) => {
+        if (t.id !== taskId) return t;
+        return {
+          ...t,
+          ...(updates.content !== undefined ? { content: updates.content.trim() } : {}),
+          ...(updates.priority !== undefined ? { priority: updates.priority } : {}),
+          ...(updates.storyPoints !== undefined ? { storyPoints: updates.storyPoints } : {}),
+        };
+      })
     );
     setSelectedTask((prev) =>
-      prev?.id === taskId ? { ...prev, content: content.trim() } : prev
+      prev?.id === taskId
+        ? {
+            ...prev,
+            ...(updates.content !== undefined ? { content: updates.content.trim() } : {}),
+            ...(updates.priority !== undefined ? { priority: updates.priority } : {}),
+            ...(updates.storyPoints !== undefined ? { storyPoints: updates.storyPoints } : {}),
+          }
+        : prev
     );
   }, []);
 
