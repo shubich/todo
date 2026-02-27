@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import type { Task } from './types/task';
 import { COLUMNS, type ColumnId, type Priority } from './types/task';
 import { loadTasks, saveTasks } from './storage';
@@ -123,6 +123,8 @@ function App() {
     return window.innerWidth <= MOBILE_BREAKPOINT;
   });
   const [activeMobileColumn, setActiveMobileColumn] = useState<ColumnId>('todo');
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
 
   useEffect(() => {
     saveTasks(tasks);
@@ -214,6 +216,43 @@ function App() {
   const handleOpenTask = useCallback((task: Task) => {
     setSelectedTask(task);
   }, []);
+  const handleBoardTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobileView) return;
+    const target = e.target as HTMLElement;
+    if (target.closest('input, textarea, select, button, label')) {
+      touchStartXRef.current = null;
+      touchStartYRef.current = null;
+      return;
+    }
+    const touch = e.touches[0];
+    touchStartXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+  }, [isMobileView]);
+  const handleBoardTouchEnd = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobileView) return;
+    const startX = touchStartXRef.current;
+    const startY = touchStartYRef.current;
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+    if (startX === null || startY === null) return;
+
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - startX;
+    const deltaY = touch.clientY - startY;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+
+    // Horizontal swipe only: enough distance and stronger than vertical movement.
+    if (absX < 48 || absX <= absY * 1.15) return;
+
+    const currentIndex = COLUMNS.findIndex((column) => column.id === activeMobileColumn);
+    if (currentIndex === -1) return;
+    if (deltaX < 0 && currentIndex < COLUMNS.length - 1) {
+      setActiveMobileColumn(COLUMNS[currentIndex + 1].id);
+    } else if (deltaX > 0 && currentIndex > 0) {
+      setActiveMobileColumn(COLUMNS[currentIndex - 1].id);
+    }
+  }, [isMobileView, activeMobileColumn]);
 
   const selectedTaskCurrent = selectedTask
     ? tasks.find((t) => t.id === selectedTask.id) ?? selectedTask
@@ -269,7 +308,11 @@ function App() {
           ))}
         </nav>
       )}
-      <div className={`app__dashboard ${isMobileView ? 'app__dashboard--mobile' : ''}`}>
+      <div
+        className={`app__dashboard ${isMobileView ? 'app__dashboard--mobile' : ''}`}
+        onTouchStart={handleBoardTouchStart}
+        onTouchEnd={handleBoardTouchEnd}
+      >
         {visibleColumns.map(({ id }) => (
           <Column
             key={id}
