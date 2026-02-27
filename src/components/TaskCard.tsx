@@ -1,5 +1,5 @@
 import type { Task } from '../types/task';
-import { getTaskTitle } from '../types/task';
+import { getTaskBody, getTaskTitle } from '../types/task';
 import './TaskCard.css';
 
 interface TaskCardProps {
@@ -12,7 +12,7 @@ interface TaskCardProps {
 
 export function TaskCard({ task, isDragging, onDragStart, onDelete, onOpen }: TaskCardProps) {
   const title = getTaskTitle(task.content);
-  const hasMore = task.content.includes('\n');
+  const body = getTaskBody(task.content);
 
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('application/x-task-id', task.id);
@@ -34,7 +34,7 @@ export function TaskCard({ task, isDragging, onDragStart, onDelete, onOpen }: Ta
     >
       <div className="task-card__main">
         <p className="task-card__title">{title || 'Untitled'}</p>
-        {hasMore && <span className="task-card__hint">...</span>}
+        {body && <p className="task-card__body">{body}</p>}
       </div>
       <button
         type="button"

@@ -1,6 +1,6 @@
 .task-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
@@ -27,24 +27,29 @@
 .task-card__main {
   flex: 1;
   min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
 }
 
 .task-card__title {
   margin: 0;
-  font-size: 0.95rem;
-  flex: 1;
-  min-width: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.task-card__hint {
-  flex-shrink: 0;
-  font-size: 0.8rem;
+.task-card__body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  white-space: normal;
+  overflow-wrap: anywhere;
   color: var(--text-muted);
 }
 
